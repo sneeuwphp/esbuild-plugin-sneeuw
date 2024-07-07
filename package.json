@@ -1,0 +1,10 @@
+{
+  "name": "@sneeuwphp/esbuild-plugin-sneeuw",
+  "packageManager": "yarn@4.3.1",
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "esbuild": "^0.23.0",
+    "prettier": "^3.3.2",
+    "typescript": "^5.5.3"
+  }
+}
