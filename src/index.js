@@ -1,20 +1,23 @@
 import { readFileSync } from "fs";
+import babel from "@babel/core";
+import injectSourcePathPlugin from "./injectSourcePathPlugin.js";
+import jsxPlugin from "@babel/plugin-syntax-jsx";
 
 const plugin = {
-  name: "sneeuw",
-  setup(build) {
-    build.onLoad({ filter: /\.ski$/ }, async ({ path }) => {
-      const contents = readFileSync(path, "utf8");
-      const jsCode = contents.includes("---")
-        ? contents.split("---")[1]
-        : contents;
+	name: "sneeuw",
+	setup(build) {
+		build.onLoad({ filter: /\.ski$/ }, async ({ path }) => {
+			let contents = readFileSync(path, "utf8");
+			contents = contents.includes("---") ? contents.split("---")[1] : contents;
 
-      return {
-        contents: jsCode,
-        loader: "jsx",
-      };
-    });
-  },
+			contents = babel.transformSync(contents, {
+				filename: path,
+				plugins: [injectSourcePathPlugin, jsxPlugin],
+			}).code;
+
+			return { contents, loader: "jsx" };
+		});
+	},
 };
 
 export default plugin;
